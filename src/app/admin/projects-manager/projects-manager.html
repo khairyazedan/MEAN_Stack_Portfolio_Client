@@ -1,0 +1,156 @@
+<div class="max-w-5xl space-y-4 p-4 md:p-6">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="font-display text-xl font-bold">Projects</h2>
+      <p class="text-sm text-muted">{{ projects.length }} projects</p>
+    </div>
+    <button
+      (click)="openNew()"
+      class="font-display rounded bg-teal px-3.5 py-2 text-sm font-semibold text-navy transition-colors hover:bg-teal-dark"
+    >
+      + New Project
+    </button>
+  </div>
+
+  <!-- Projects table -->
+  <div class="overflow-hidden rounded border border-navy-600 bg-navy-800">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-navy-600">
+          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Project</th>
+          <th class="hidden px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted md:table-cell">Technologies</th>
+          <th class="hidden px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted sm:table-cell">Featured</th>
+          <th class="w-24 px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of projects; track p._id) {
+          <tr class="border-b border-navy-600 transition-colors last:border-0 hover:bg-[#111827]">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <img [src]="p.coverImage" alt="" class="h-10 w-14 shrink-0 rounded bg-navy-600 object-cover" />
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-medium">{{ p.title }}</p>
+                  <p class="truncate text-xs text-muted">{{ p.summary }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="hidden px-4 py-3 text-xs text-muted md:table-cell">{{ p.technologies }}</td>
+            <td class="hidden px-4 py-3 sm:table-cell">
+              @if (p.featured) {
+                <span class="rounded-full border border-teal/30 bg-teal/10 px-2 py-0.5 text-xs text-teal">Featured</span>
+              } @else {
+                <span class="text-xs text-muted">—</span>
+              }
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center justify-end gap-1">
+                <button (click)="openEdit(p)" class="rounded p-1.5 text-muted hover:bg-teal/10 hover:text-teal">✎</button>
+                <button (click)="deleteProject(p._id)" class="rounded p-1.5 text-muted hover:bg-red-500/10 hover:text-red-400">🗑</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="px-4 py-10 text-center text-sm text-muted">No projects yet.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add / Edit project modal -->
+  @if (showForm) {
+    <div class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/75 p-4">
+      <form
+        [formGroup]="projectForm"
+        (ngSubmit)="onSubmit()"
+        class="my-8 w-full max-w-xl rounded-lg border border-navy-600 bg-navy-800 p-5"
+      >
+        <div class="mb-5 flex items-center justify-between">
+          <h3 class="font-display font-bold">{{ editingId ? 'Edit Project' : 'New Project' }}</h3>
+          <button type="button" (click)="closeForm()" class="text-muted hover:text-fore">✕</button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Title</label>
+            <input formControlName="title" placeholder="Project name"
+              class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Slug</label>
+            <input formControlName="slug" placeholder="my-project"
+              class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Summary</label>
+            <input formControlName="summary" placeholder="One-liner shown on the card"
+              class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Description</label>
+            <textarea formControlName="description" rows="6" placeholder="Detailed description..."
+              class="w-full resize-y rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm leading-relaxed text-fore placeholder-muted focus:border-teal focus:outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Cover Image</label>
+            <input type="file" accept="image/*" (change)="onFileChange($event)"
+              class="w-full text-sm text-muted file:mr-3 file:rounded file:border-0 file:bg-teal file:px-3 file:py-2 file:text-sm file:font-semibold file:text-navy" />
+            @if (editingId) {
+              <p class="mt-1 text-xs text-muted">Leave empty to keep the current image.</p>
+            }
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Live URL</label>
+              <input formControlName="liveUrl" placeholder="https://..."
+                class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">GitHub URL</label>
+              <input formControlName="githubUrl" placeholder="https://github.com/..."
+                class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Technologies (comma separated)</label>
+            <input formControlName="technologies" placeholder="angular, node, mongodb"
+              class="w-full rounded border border-navy-600 bg-navy px-3.5 py-2.5 text-sm text-fore placeholder-muted focus:border-teal focus:outline-none" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Order</label>
+              <input type="number" min="0" formControlName="order"
+                class="w-full rounded border border-navy-600 bg-navy px-3 py-2 text-sm text-fore focus:border-teal focus:outline-none" />
+            </div>
+            <div>
+              <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted">Completed on</label>
+              <input type="date" formControlName="completedAt"
+                class="w-full rounded border border-navy-600 bg-navy px-3 py-2 text-sm text-fore focus:border-teal focus:outline-none" />
+            </div>
+          </div>
+
+          <label class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="featured" class="h-4 w-4 accent-[#00e5c0]" />
+            Featured project
+          </label>
+
+          <button type="submit"
+            class="font-display w-full rounded bg-teal py-2.5 text-sm font-semibold text-navy hover:bg-teal-dark">
+            {{ editingId ? 'Update Project' : 'Save Project' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

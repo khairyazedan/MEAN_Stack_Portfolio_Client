@@ -1,0 +1,84 @@
+@if (about; as a) {
+
+  <!-- Hero -->
+  <section id="top" class="flex min-h-screen items-center pt-14">
+    <div class="mx-auto w-full max-w-5xl px-5 py-20 md:px-8">
+      <div class="grid items-center gap-12 md:grid-cols-[1fr_340px]">
+        <div>
+          <p class="mb-5 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Available for work</p>
+          <h1 class="font-display mb-4 text-5xl font-bold leading-[1.05] md:text-6xl lg:text-7xl">{{ a.fullName }}</h1>
+          @if (a.title) {
+            <p class="font-display mb-4 text-xl font-medium text-[#00e5c0] md:text-2xl">{{ a.title }}</p>
+          }
+          @if (a.headLine) {
+            <p class="mb-10 max-w-md text-base leading-relaxed text-[#64748b] md:text-lg">{{ a.headLine }}</p>
+          }
+          <div class="flex flex-wrap gap-3">
+            <a routerLink="/projects" class="font-display flex items-center gap-2 rounded bg-[#00e5c0] px-5 py-2.5 text-sm font-semibold text-[#080c14] transition-colors hover:bg-[#00b899]">View Projects →</a>
+            <a routerLink="/contact" class="flex items-center gap-2 rounded border border-[#1e2d45] px-5 py-2.5 text-sm font-medium text-[#94a3b8] transition-colors hover:border-[#00e5c0] hover:text-[#e2e8f0]">Contact Me</a>
+          </div>
+        </div>
+
+        @if (a.avatarUrl) {
+          <div class="hidden md:block">
+            <div class="relative aspect-[4/5] w-full">
+              <div class="absolute -right-3 -top-3 h-24 w-24 rounded-tr border-r-2 border-t-2 border-[#00e5c0]"></div>
+              <div class="absolute -bottom-3 -left-3 h-16 w-16 rounded-bl border-b-2 border-l-2 border-[#00e5c0]"></div>
+              <img [src]="a.avatarUrl" [alt]="a.fullName" class="relative z-10 h-full w-full rounded object-cover" />
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="mt-14 flex items-center gap-4 border-t border-[#1e2d45] pt-14 text-sm text-[#64748b]">
+        @for (l of a.socialLinks; track l.platform) {
+          <a
+            [href]="l.platform === 'email' ? 'mailto:' + l.url : l.url"
+            target="_blank"
+            rel="noopener"
+            class="capitalize hover:text-[#00e5c0]"
+          >{{ l.platform }}</a>
+        }
+        <span class="ml-auto font-mono text-xs text-[#475569]">scroll →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="border-t border-[#1e2d45] py-24">
+    <div class="mx-auto max-w-5xl px-5 md:px-8">
+      <div class="grid items-start gap-12 md:grid-cols-[2fr_1fr]">
+        <div>
+          <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">About</p>
+          <h2 class="font-display mb-6 text-3xl font-bold md:text-4xl">Crafting software that<br /><span class="text-[#00e5c0]">actually matters.</span></h2>
+          <div class="space-y-4">
+            @for (para of bioParagraphs; track $index) {
+              <p class="leading-relaxed text-[#94a3b8]">{{ para }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="md:mt-10">
+          @if (a.avatarUrl) {
+            <img [src]="a.avatarUrl" [alt]="a.fullName" class="aspect-square w-full rounded bg-[#0d1421] object-cover ring-1 ring-[#1e2d45]" />
+          }
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            @if (a.yearsOfExperience) {
+              <div class="rounded border border-[#1e2d45] bg-[#0d1421] p-3">
+                <p class="font-display text-lg font-bold text-[#00e5c0]">{{ a.yearsOfExperience }}+ years</p>
+                <p class="text-xs text-[#64748b]">Experience</p>
+              </div>
+            }
+            @if (a.location) {
+              <div class="rounded border border-[#1e2d45] bg-[#0d1421] p-3">
+                <p class="font-display text-lg font-bold text-[#00e5c0]">{{ a.location }}</p>
+                <p class="text-xs text-[#64748b]">Location</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+}

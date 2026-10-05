@@ -1,0 +1,166 @@
+<div class="max-w-4xl space-y-4 p-4 md:p-6">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="font-display text-xl font-bold">Skills</h2>
+      <p class="text-sm text-[#64748b]">
+        {{ skills.length }} skills across {{ usedCategories.length - 1 }} categories
+      </p>
+    </div>
+    <button type="button" (click)="openAdd()"
+      class="font-display flex items-center gap-1.5 rounded bg-[#00e5c0] px-3.5 py-2 text-sm font-semibold text-[#080c14] transition-colors hover:bg-[#00b899]">
+      + Add Skill
+    </button>
+  </div>
+
+  <!-- Category filter -->
+  <div class="flex flex-wrap gap-1.5">
+    @for (c of usedCategories; track c) {
+      <button
+        type="button"
+        (click)="filter = c"
+        class="rounded-full border px-2.5 py-1 text-xs font-medium transition-colors"
+        [class]="filter === c
+          ? 'border-[#00e5c0] bg-[#00e5c0] text-[#080c14]'
+          : 'border-[#1e2d45] text-[#64748b] hover:border-[#00e5c0] hover:text-[#00e5c0]'"
+      >{{ c }}</button>
+    }
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-hidden rounded border border-[#1e2d45] bg-[#0d1421]">
+    <table class="w-full">
+      <thead>
+        <tr class="border-b border-[#1e2d45]">
+          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#64748b]">Skill</th>
+          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#64748b]">Category</th>
+          <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#64748b]">Proficiency</th>
+          <th class="w-20 px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (skill of visibleSkills; track skill._id) {
+          <tr class="border-b border-[#1e2d45] transition-colors last:border-0 hover:bg-[#111827]">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-2.5">
+                @if (skill.iconUrl) {
+                  <img [src]="skill.iconUrl" [alt]="skill.name" class="h-6 w-6 shrink-0 object-contain" />
+                } @else {
+                  <div class="font-display flex h-6 w-6 shrink-0 items-center justify-center rounded bg-[#1e2d45] text-xs font-bold text-[#00e5c0]">
+                    {{ skill.name.charAt(0).toUpperCase() }}
+                  </div>
+                }
+                <span class="text-sm font-medium">{{ skill.name }}</span>
+                @if (skill.featured) {
+                  <span class="rounded-full bg-[#00e5c0]/10 px-1.5 py-0.5 text-[10px] text-[#00e5c0]">Featured</span>
+                }
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="rounded-full border border-[#1e2d45] px-2 py-0.5 text-xs text-[#64748b]">{{ skill.category }}</span>
+            </td>
+            <td class="px-4 py-3">
+              @if (skill.proficiencyLevel) {
+                <div class="flex items-center gap-2">
+                  <div class="h-1.5 max-w-24 flex-1 rounded-full bg-[#1e2d45]">
+                    <div class="h-full rounded-full bg-[#00e5c0]" [style.width.%]="skill.proficiencyLevel"></div>
+                  </div>
+                  <span class="font-mono text-xs tabular-nums text-[#64748b]">{{ skill.proficiencyLevel }}%</span>
+                </div>
+              } @else {
+                <span class="text-xs text-[#475569]">—</span>
+              }
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center justify-end gap-1">
+                <button type="button" (click)="openEdit(skill)" aria-label="Edit skill"
+                  class="rounded p-1.5 text-[#64748b] hover:bg-[#00e5c0]/10 hover:text-[#00e5c0]">✎</button>
+                <button type="button" (click)="deleteSkill(skill)" aria-label="Delete skill"
+                  class="rounded p-1.5 text-[#64748b] hover:bg-red-500/10 hover:text-red-400">🗑</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class="px-4 py-10 text-center text-sm text-[#64748b]">No skills yet.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add / edit modal -->
+  @if (showForm) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" (click)="closeForm()">
+      <form
+        [formGroup]="skillForm"
+        (ngSubmit)="onSubmit()"
+        (click)="$event.stopPropagation()"
+        class="w-full max-w-sm rounded-lg border border-[#1e2d45] bg-[#0d1421] p-5"
+      >
+        <div class="mb-5 flex items-center justify-between">
+          <h3 class="font-display font-bold">{{ editingId ? 'Edit Skill' : 'Add Skill' }}</h3>
+          <button type="button" (click)="closeForm()" aria-label="Close" class="text-[#64748b] hover:text-[#e2e8f0]">✕</button>
+        </div>
+
+        <div class="space-y-3.5">
+          <div>
+            <label for="name" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#64748b]">Skill name *</label>
+            <input id="name" formControlName="name" placeholder="e.g. React"
+              class="w-full rounded border border-[#1e2d45] bg-[#080c14] px-3 py-2 text-sm text-[#e2e8f0] focus:border-[#00e5c0] focus:outline-none [&.ng-invalid.ng-touched]:border-red-400" />
+            @if (skillForm.controls.name.touched && skillForm.controls.name.hasError('required')) {
+              <p class="mt-1 text-xs text-red-400">Name is required</p>
+            }
+          </div>
+
+          <div>
+            <label for="category" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#64748b]">Category *</label>
+            <select id="category" formControlName="category"
+              class="w-full rounded border border-[#1e2d45] bg-[#080c14] px-3 py-2 text-sm text-[#e2e8f0] focus:border-[#00e5c0] focus:outline-none [&.ng-invalid.ng-touched]:border-red-400">
+              <option value="" disabled>Choose a category</option>
+              @for (c of categories; track c) {
+                <option [value]="c">{{ c }}</option>
+              }
+            </select>
+            @if (skillForm.controls.category.touched && skillForm.controls.category.hasError('required')) {
+              <p class="mt-1 text-xs text-red-400">Choose a category</p>
+            }
+          </div>
+
+          <div>
+            <label for="iconUrl" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#64748b]">Icon URL</label>
+            <input id="iconUrl" type="url" formControlName="iconUrl" placeholder="https://... (optional)"
+              class="w-full rounded border border-[#1e2d45] bg-[#080c14] px-3 py-2 text-sm text-[#e2e8f0] placeholder-[#64748b] focus:border-[#00e5c0] focus:outline-none" />
+          </div>
+
+          <div>
+            <label for="level" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#64748b]">
+              Proficiency — {{ skillForm.controls.proficiencyLevel.value }}%
+            </label>
+            <input id="level" type="range" min="1" max="100" formControlName="proficiencyLevel" class="w-full accent-[#00e5c0]" />
+          </div>
+
+          <div class="grid grid-cols-2 items-end gap-3">
+            <div>
+              <label for="order" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#64748b]">Order</label>
+              <input id="order" type="number" min="0" formControlName="order"
+                class="w-full rounded border border-[#1e2d45] bg-[#080c14] px-3 py-2 text-sm text-[#e2e8f0] focus:border-[#00e5c0] focus:outline-none" />
+            </div>
+            <label class="flex cursor-pointer items-center gap-2 pb-2 text-sm">
+              <input type="checkbox" formControlName="featured" class="h-4 w-4 accent-[#00e5c0]" /> Featured
+            </label>
+          </div>
+
+          @if (errorMessage) {
+            <p class="text-sm text-red-400" role="alert">{{ errorMessage }}</p>
+          }
+
+          <button type="submit" [disabled]="isSaving"
+            class="font-display mt-1 w-full rounded bg-[#00e5c0] py-2 text-sm font-semibold text-[#080c14] hover:bg-[#00b899] disabled:cursor-not-allowed disabled:opacity-60">
+            {{ isSaving ? 'Saving...' : (editingId ? 'Save Changes' : 'Add Skill') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

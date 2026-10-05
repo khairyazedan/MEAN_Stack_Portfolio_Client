@@ -1,0 +1,350 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Design tokens
+   FIX: Tailwind v4 only generates utilities (bg-teal, text-teal, bg-teal/10,
+   text-muted, border-navy-600 …) from variables named --color-*.
+   `static` makes Tailwind always emit them, so the aliases below always resolve.
+   ========================================================================== */
+@theme static {
+  --color-navy: #080c14;
+  --color-navy-900: #05080f;
+  --color-navy-800: #0d1421;
+  --color-navy-700: #111827;
+  --color-navy-600: #1e2d45;
+  --color-teal: #00e5c0;
+  --color-teal-dark: #00b899;
+  --color-fore: #e2e8f0;
+  --color-muted: #64748b;
+  --color-muted-2: #94a3b8;
+
+  --font-display: 'Instrument Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Short aliases so the hand-written CSS below (var(--teal) …) keeps working */
+:root {
+  --navy: var(--color-navy);
+  --navy-800: var(--color-navy-800);
+  --navy-700: var(--color-navy-700);
+  --navy-600: var(--color-navy-600);
+  --teal: var(--color-teal);
+  --teal-dark: var(--color-teal-dark);
+  --fore: var(--color-fore);
+  --muted: var(--color-muted);
+  --muted-2: var(--color-muted-2);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+body{
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--fore);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,h4,h5,h6{ font-family: var(--font-display); }
+code,pre,.mono{ font-family: var(--font-mono); }
+
+::-webkit-scrollbar{ width:4px; height:4px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background: var(--navy-600); border-radius:2px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--teal); }
+
+a{ text-decoration:none; }
+
+/* ==========================================================================
+   FIX: routed page components (<app-dashboard>, <app-projects> …) are inline
+   custom elements, so inside a flex parent they shrink to their content.
+   Make whatever the router renders fill the available width.
+   ========================================================================== */
+router-outlet + * {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---- Utility helpers still needed (Tailwind provides bg-*text-*border-* now) ---- */
+.text-muted-c{ color: var(--muted) !important; }
+.hover-teal:hover{ color: var(--teal) !important; }
+.rounded-sm2{ border-radius: .25rem; }
+
+.btn-teal{
+  background-color: var(--teal);
+  color: var(--navy);
+  font-weight:600;
+  border:none;
+}
+.btn-teal:hover{ background-color: var(--teal-dark); color: var(--navy); }
+
+.btn-outline-navy{
+  background: transparent;
+  border:1px solid var(--navy-600);
+  color: var(--muted-2);
+}
+.btn-outline-navy:hover{ border-color: var(--teal); color: var(--fore); }
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.site-navbar{
+  position:fixed; top:0; left:0; right:0; z-index:1030;
+  transition: background-color .3s ease, backdrop-filter .3s ease, border-color .3s ease;
+  height:56px;
+}
+.site-navbar.scrolled{
+  background-color: rgba(8,12,20,.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--navy-600);
+}
+.nav-link-custom{
+  color: var(--muted);
+  font-size:.875rem;
+  background:none; border:none; text-transform:capitalize;
+}
+.nav-link-custom:hover{ color: var(--fore); }
+.nav-admin-link{ color: rgba(100,116,139,.6); font-size:.75rem; }
+.nav-admin-link:hover{ color: var(--muted); }
+
+.mobile-menu{
+  background: var(--navy-800);
+  border-bottom:1px solid var(--navy-600);
+  display:none;
+}
+.mobile-menu.open{ display:flex; flex-direction:column; }
+.mobile-menu .nav-link-custom{ text-align:left; padding:.5rem 0; }
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+.hero-section{ min-height:100vh; display:flex; align-items:center; padding-top:56px; }
+.hero-eyebrow{ color: var(--teal); font-family: var(--font-mono); font-size:.75rem; text-transform:uppercase; letter-spacing:.15em; }
+.hero-title{ font-size: clamp(2.75rem, 6vw, 4.5rem); font-weight:700; line-height:1.05; }
+.hero-role{ color: var(--teal); font-size: clamp(1.25rem,2.5vw,1.5rem); font-weight:500; }
+.hero-tagline{ color: var(--muted); max-width:28rem; }
+.hero-photo-wrap{ position:relative; width:100%; aspect-ratio: 4/5; }
+.hero-photo-wrap img{ position:relative; z-index:2; width:100%; height:100%; object-fit:cover; border-radius:.25rem; filter:grayscale(20%) contrast(1.05) brightness(.95); }
+.hero-photo-dots{
+  position:absolute; inset:0; opacity:.2; z-index:0; border-radius:.25rem;
+  background-image: radial-gradient(circle, var(--navy-600) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.hero-corner-tr{ position:absolute; top:-12px; right:-12px; width:6rem; height:6rem; border-top:2px solid var(--teal); border-right:2px solid var(--teal); border-top-right-radius:.375rem; z-index:1; }
+.hero-corner-bl{ position:absolute; bottom:-12px; left:-12px; width:4rem; height:4rem; border-bottom:2px solid var(--teal); border-left:2px solid var(--teal); border-bottom-left-radius:.375rem; z-index:1; }
+.hero-social a{ color: var(--muted); }
+.hero-social a:hover{ color: var(--teal); }
+.hero-scroll-hint{ color: var(--navy-600); font-family: var(--font-mono); font-size:.75rem; }
+
+/* ==========================================================================
+   Section shared
+   ========================================================================== */
+.section{ padding:6rem 0; border-top:1px solid var(--navy-600); }
+.section-eyebrow{ color: var(--teal); font-family: var(--font-mono); font-size:.75rem; text-transform:uppercase; letter-spacing:.15em; }
+.section-title{ font-size: clamp(1.875rem,3.5vw,2.25rem); font-weight:700; color: var(--fore); }
+
+.fade-section{ opacity:0; transform: translateY(28px); transition: opacity .65s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1,.36,1); }
+.fade-section.in-view{ opacity:1; transform:none; }
+
+/* ==========================================================================
+   About
+   ========================================================================== */
+.about-stat{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.25rem; padding:.75rem; }
+.about-stat .val{ color: var(--teal); font-weight:700; font-size:1.125rem; }
+.about-stat .lbl{ color: var(--muted); font-size:.75rem; }
+.about-photo{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:.25rem; background: var(--navy-800); filter: grayscale(30%); }
+
+/* ==========================================================================
+   Skills
+   ========================================================================== */
+.skill-pill{
+  font-size:.75rem; padding:.25rem .75rem; border-radius:999px; border:1px solid var(--navy-600);
+  color: var(--muted); background:transparent; font-weight:500;
+}
+.skill-pill.active{ background: var(--teal); color: var(--navy); border-color: var(--teal); }
+.skill-pill:hover:not(.active){ border-color: var(--teal); color: var(--teal); }
+
+.skill-card{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.25rem; padding:1rem; transition: border-color .3s ease; }
+.skill-card:hover{ border-color: rgba(0,229,192,.4); }
+.skill-card .icon{ font-size:1.5rem; }
+.skill-card .name{ font-family: var(--font-display); font-weight:500; font-size:.875rem; color: var(--fore); }
+.skill-card .cat{ color: var(--muted); font-size:.75rem; }
+.skill-bar-track{ flex:1; height:4px; border-radius:999px; background: var(--navy-600); }
+.skill-bar-fill{ height:100%; border-radius:999px; background: var(--teal); transition: width .7s ease; }
+.skill-pct{ color: var(--muted); font-size:.75rem; font-family: var(--font-mono); }
+
+/* ==========================================================================
+   Projects
+   ========================================================================== */
+.project-card{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.25rem; overflow:hidden; text-align:left; width:100%; transition: border-color .3s ease; cursor:pointer; }
+.project-card:hover{ border-color: rgba(0,229,192,.4); }
+.project-thumb-wrap{ aspect-ratio:16/9; overflow:hidden; background: var(--navy); position:relative; }
+.project-thumb-wrap img{ width:100%; height:100%; object-fit:cover; transition: transform .5s ease; }
+.project-card:hover .project-thumb-wrap img{ transform: scale(1.05); }
+.project-featured-badge{ position:absolute; top:.5rem; left:.5rem; font-size:.75rem; padding:.15rem .6rem; background: rgba(0,229,192,.9); color: var(--navy); font-weight:600; border-radius:999px; }
+.project-tag{ font-size:.75rem; font-family: var(--font-mono); color: var(--muted); }
+.project-title{ font-family: var(--font-display); font-weight:700; color: var(--fore); }
+.project-desc{ color: var(--muted); font-size:.875rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.project-view-link{ color: var(--teal); font-size:.75rem; font-weight:500; opacity:0; transition: opacity .2s ease; }
+.project-card:hover .project-view-link{ opacity:1; }
+
+.modal-content.portfolio-modal{ background: var(--navy-800); border:1px solid var(--navy-600); }
+.modal-img-wrap{ aspect-ratio:16/9; overflow:hidden; background: var(--navy); position:relative; }
+.modal-img-wrap img{ width:100%; height:100%; object-fit:cover; }
+.modal-close-btn{ position:absolute; top:.75rem; right:.75rem; width:2rem; height:2rem; background: rgba(8,12,20,.8); border:none; border-radius:.25rem; color: var(--muted-2); display:flex; align-items:center; justify-content:center; }
+.modal-dots{ position:absolute; bottom:.75rem; left:50%; transform:translateX(-50%); display:flex; gap:.35rem; }
+.modal-dot{ width:6px; height:6px; border-radius:999px; background: rgba(255,255,255,.3); border:none; padding:0; }
+.modal-dot.active{ background: var(--teal); }
+.modal-tag{ font-size:.75rem; padding:.1rem .55rem; border-radius:999px; border:1px solid var(--navy-600); color: var(--muted); font-family: var(--font-mono); }
+
+/* ==========================================================================
+   Contact
+   ========================================================================== */
+.contact-meta-dot{ width:6px; height:6px; border-radius:999px; background: var(--teal); display:inline-block; }
+.form-control-dark{
+  background: var(--navy-800); border:1px solid var(--navy-600); color: var(--fore);
+  border-radius:.25rem; font-size:.875rem; padding:.625rem .875rem;
+}
+.form-control-dark::placeholder{ color: rgba(100,116,139,.6); }
+.form-control-dark:focus{ background: var(--navy-800); border-color: var(--teal); color: var(--fore); box-shadow:none; outline:none; }
+.form-label-dark{ font-size:.75rem; font-weight:500; color: var(--muted-2); text-transform:uppercase; letter-spacing:.05em; }
+.contact-success{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.25rem; padding:2rem; text-align:center; }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.site-footer{ border-top:1px solid var(--navy-600); padding:2.5rem 0; }
+.site-footer p{ color: var(--navy-600); }
+.site-footer a{ color: var(--navy-600); }
+.site-footer a:hover{ color: var(--muted); }
+
+/* ==========================================================================
+   Admin shared (login + dashboard)
+   ========================================================================== */
+.admin-body{ background: var(--navy); min-height:100vh; }
+.admin-card{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.5rem; }
+.admin-logo-badge{ width:2rem; height:2rem; background: var(--teal); border-radius:.25rem; display:flex; align-items:center; justify-content:center; color: var(--navy); font-weight:700; font-size:.75rem; }
+
+.admin-shell{ display:flex; height:100vh; overflow:hidden; }
+.admin-shell.theme-light{ background:#f1f5f9; color:#0f172a; }
+.admin-shell.theme-dark{ background: var(--navy); color: var(--fore); }
+
+.admin-sidebar{ width:13rem; flex-shrink:0; border-right:1px solid var(--navy-600); display:flex; flex-direction:column; background: var(--navy-800); }
+.admin-shell.theme-light .admin-sidebar{ background:#fff; border-color:#e2e8f0; }
+
+.admin-nav-btn{
+  width:100%; display:flex; align-items:center; gap:.6rem; padding:.5rem .75rem; border-radius:.25rem;
+  font-size:.875rem; font-weight:500; color: var(--muted); background:none; border:none; text-align:left;
+}
+.admin-nav-btn:hover{ background: rgba(30,45,69,.5); color: var(--fore); }
+.admin-nav-btn.active{ background: rgba(0,229,192,.1); color: var(--teal); }
+.admin-shell.theme-light .admin-nav-btn{ color:#64748b; }
+.admin-shell.theme-light .admin-nav-btn:hover{ background:#f1f5f9; color:#0f172a; }
+.admin-shell.theme-light .admin-nav-btn.active{ background: rgba(0,229,192,.1); color:#00b899; }
+
+.admin-badge-count{ margin-left:auto; background: var(--teal); color: var(--navy); font-size:.7rem; font-weight:700; border-radius:999px; width:1.1rem; height:1.1rem; display:flex; align-items:center; justify-content:center; }
+
+.admin-main{ flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+.admin-topbar{ height:56px; display:flex; align-items:center; gap:.75rem; padding:0 1.25rem; border-bottom:1px solid var(--navy-600); flex-shrink:0; }
+.admin-shell.theme-light .admin-topbar{ border-color:#e2e8f0; }
+.admin-content{ flex:1; overflow-y:auto; }
+
+.admin-stat-card{ background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.25rem; padding:1.25rem; }
+.admin-shell.theme-light .admin-stat-card{ background:#fff; border-color:#e2e8f0; }
+.admin-shell.theme-light .admin-card{ background:#fff; border-color:#e2e8f0; }
+
+.toggle-switch{ width:2.5rem; height:1.25rem; border-radius:999px; background: var(--navy-600); position:relative; border:none; }
+.toggle-switch.on{ background: var(--teal); }
+.toggle-switch .knob{ position:absolute; top:2px; left:2px; width:1rem; height:1rem; border-radius:999px; background:#fff; transition: left .2s ease; }
+.toggle-switch.on .knob{ left: calc(100% - 1.125rem); }
+
+.admin-table th{ font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color: var(--muted); font-weight:500; }
+.admin-shell.theme-light .admin-table th{ color:#94a3b8; }
+
+/* ==========================================================================
+   CSS-ONLY INTERACTIVITY (checkbox hack / :target)
+   ========================================================================== */
+.state-toggle{
+  position:absolute; opacity:0; width:1px; height:1px; overflow:hidden; pointer-events:none;
+}
+
+/* ---- Mobile nav menu (public site) ---- */
+.mobile-menu{ display:none; }
+#navToggle:checked ~ .mobile-menu{ display:flex; }
+#navToggle:checked ~ .site-navbar-inner .icon-open{ display:none; }
+#navToggle:not(:checked) ~ .site-navbar-inner .icon-close{ display:none; }
+.mobile-menu-btn{ cursor:pointer; }
+
+/* ---- Skills category filter (radio pills) ---- */
+.skill-filter-radio{ position:absolute; opacity:0; width:1px; height:1px; }
+.skill-pill{ cursor:pointer; display:inline-block; }
+#filter-frontend:checked ~ .skills-grid .skill-card:not(.cat-Frontend){ display:none; }
+#filter-backend:checked ~ .skills-grid .skill-card:not(.cat-Backend){ display:none; }
+#filter-languages:checked ~ .skills-grid .skill-card:not(.cat-Languages){ display:none; }
+#filter-database:checked ~ .skills-grid .skill-card:not(.cat-Database){ display:none; }
+#filter-devops:checked ~ .skills-grid .skill-card:not(.cat-DevOps){ display:none; }
+#filter-design:checked ~ .skills-grid .skill-card:not(.cat-Design){ display:none; }
+
+#filter-all:checked ~ .skill-filters label[for="filter-all"],
+#filter-frontend:checked ~ .skill-filters label[for="filter-frontend"],
+#filter-backend:checked ~ .skill-filters label[for="filter-backend"],
+#filter-languages:checked ~ .skill-filters label[for="filter-languages"],
+#filter-database:checked ~ .skill-filters label[for="filter-database"],
+#filter-devops:checked ~ .skill-filters label[for="filter-devops"],
+#filter-design:checked ~ .skill-filters label[for="filter-design"]{
+  background: var(--teal); color: var(--navy); border-color: var(--teal);
+}
+
+/* ---- Project lightbox (:target) ---- */
+.project-lightbox{
+  position:fixed; inset:0; z-index:1050; background:rgba(0,0,0,.8);
+  display:flex; align-items:flex-start; justify-content:center; padding:2rem 1rem; overflow-y:auto;
+  visibility:hidden; opacity:0; transition: opacity .2s ease;
+}
+.project-lightbox:target{ visibility:visible; opacity:1; }
+.lightbox-panel{ width:100%; max-width:42rem; background: var(--navy-800); border:1px solid var(--navy-600); border-radius:.5rem; margin-top:2rem; }
+.lightbox-close{
+  position:absolute; top:.75rem; right:.75rem; width:2rem; height:2rem; background: rgba(8,12,20,.8);
+  border-radius:.25rem; color: var(--muted-2); display:flex; align-items:center; justify-content:center;
+}
+
+/* ---- Admin: theme toggle (checkbox hack) ---- */
+#themeToggle:checked ~ .admin-shell{ background:#f1f5f9; color:#0f172a; }
+#themeToggle:checked ~ .admin-shell .admin-sidebar,
+#themeToggle:checked ~ .admin-shell .admin-card,
+#themeToggle:checked ~ .admin-shell .admin-stat-card{ background:#fff; border-color:#e2e8f0; }
+#themeToggle:checked ~ .admin-shell .admin-nav-btn{ color:#64748b; }
+#themeToggle:checked ~ .admin-shell .admin-nav-btn:hover{ background:#f1f5f9; color:#0f172a; }
+#themeToggle:checked ~ .admin-shell .admin-nav-btn.active{ color:#00b899; }
+#themeToggle:checked ~ .admin-shell .admin-topbar,
+#themeToggle:checked ~ .admin-shell .border-navy-600{ border-color:#e2e8f0 !important; }
+#themeToggle:checked ~ .admin-shell .theme-label-dark{ display:none; }
+#themeToggle:not(:checked) ~ .admin-shell .theme-label-light{ display:none; }
+
+/* ---- Admin: legacy mobile sidebar (old Bootstrap markup) ---- */
+.mobile-sidebar-overlay{ display:none; }
+#sidebarToggle:checked ~ .admin-shell .mobile-sidebar-overlay{
+  display:flex; position:fixed; inset:0; z-index:1050;
+}
+.mobile-sidebar-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.6); }
+
+/* ---- Admin: messages two-pane view via :target ---- */
+.msg-detail-panel{
+  position:absolute; inset:0; opacity:0; visibility:hidden; overflow-y:auto;
+  transition: opacity .15s ease; background: inherit;
+}
+.msg-detail-panel:target{ opacity:1; visibility:visible; }
+.msg-detail-placeholder{ position:absolute; inset:0; display:flex; }
+.msg-detail-stack{ position:relative; flex:1; min-height:24rem; }
+.msg-row.is-unread{ font-weight:500; }
+
+.demo-note{
+  font-size:.72rem; color: var(--muted); background: rgba(0,229,192,.06);
+  border:1px dashed var(--navy-600); border-radius:.25rem; padding:.5rem .75rem;
+}

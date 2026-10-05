@@ -1,0 +1,135 @@
+<!-- Projects -->
+    <section id="projects" class="border-t border-[#1e2d45] py-24">
+      <div class="mx-auto max-w-5xl px-5 md:px-8">
+        <div class="mb-10">
+          <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Projects</p>
+          <h2 class="font-display text-3xl font-bold md:text-4xl">Selected work.</h2>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          @for (proj of projects; track proj._id) {
+            <button
+              (click)="openProject(proj)"
+              type="button"
+              class="group overflow-hidden rounded border border-[#1e2d45] bg-[#0d1421] text-left transition-all duration-300 hover:border-[#00e5c0]/40"
+            >
+              <div class="relative aspect-video overflow-hidden bg-[#080c14]">
+                @if (proj.coverImage) {
+                  <img
+                    [src]="proj.coverImage"
+                    [alt]="proj.title"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                }
+                @if (proj.featured) {
+                  <span class="font-display absolute left-2 top-2 rounded-full bg-[#00e5c0]/90 px-2 py-0.5 text-xs font-semibold text-[#080c14]">
+                    Featured
+                  </span>
+                }
+              </div>
+          
+              <div class="p-4">
+                @if (proj.technologies.length) {
+                  <div class="mb-2 flex flex-wrap gap-1">
+                    @for (tech of proj.technologies.slice(0, 3); track tech) {
+                      <span class="font-mono text-xs text-[#64748b]">{{ tech }}</span>
+                    }
+                    @if (proj.technologies.length > 3) {
+                      <span class="text-xs text-[#64748b]">+{{ proj.technologies.length - 3 }}</span>
+                    }
+                  </div>
+                }
+                <h3 class="font-display mb-1 text-base font-bold">{{ proj.title }}</h3>
+                <p class="line-clamp-2 text-sm text-[#64748b]">{{ proj.summary }}</p>
+                <p class="mt-3 text-xs font-medium text-[#00e5c0] opacity-0 transition-opacity group-hover:opacity-100">View details →</p>
+              </div>
+            </button>
+          } @empty {
+            <p class="col-span-full text-sm text-[#64748b]">No projects yet.</p>
+          }
+        </div>
+      </div>
+  
+      @if (selectedProject; as p) {
+        <div
+          class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-4"
+          (click)="closeProject()"
+        >
+          <div
+            class="my-8 w-full max-w-2xl rounded-lg border border-[#1e2d45] bg-[#0d1421]"
+            (click)="$event.stopPropagation()"
+          >
+            <!-- Gallery -->
+            <div class="relative aspect-video overflow-hidden rounded-t-lg bg-[#080c14]">
+              @if (gallery.length) {
+                <img [src]="gallery[imageIndex]" [alt]="p.title" class="h-full w-full object-cover" />
+              }
+      
+              <button
+                type="button"
+                (click)="closeProject()"
+                aria-label="Close"
+                class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded bg-[#080c14]/80 text-[#94a3b8] hover:text-[#e2e8f0]"
+              >✕</button>
+      
+              @if (gallery.length > 1) {
+                <button
+                  type="button"
+                  (click)="prevImage()"
+                  aria-label="Previous image"
+                  class="absolute left-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded bg-[#080c14]/80 text-[#94a3b8] hover:text-[#e2e8f0]"
+                >‹</button>
+                <button
+                  type="button"
+                  (click)="nextImage()"
+                  aria-label="Next image"
+                  class="absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded bg-[#080c14]/80 text-[#94a3b8] hover:text-[#e2e8f0]"
+                >›</button>
+      
+                <div class="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+                  @for (img of gallery; track $index) {
+                    <button
+                      type="button"
+                      (click)="imageIndex = $index"
+                      [attr.aria-label]="'Image ' + ($index + 1)"
+                      class="h-1.5 w-1.5 rounded-full"
+                      [class]="$index === imageIndex ? 'bg-[#00e5c0]' : 'bg-white/30'"
+                    ></button>
+                  }
+                </div>
+              }
+            </div>
+      
+            <!-- Details -->
+            <div class="p-6">
+              @if (p.technologies.length) {
+                <div class="mb-3 flex flex-wrap gap-1.5">
+                  @for (tech of p.technologies; track tech) {
+                    <span class="rounded-full border border-[#1e2d45] px-2 py-0.5 font-mono text-xs text-[#64748b]">{{ tech }}</span>
+                  }
+                </div>
+              }
+      
+              <h2 class="font-display mb-1 text-2xl font-bold">{{ p.title }}</h2>
+              <p class="mb-5 text-sm text-[#64748b]">{{ p.summary }}</p>
+      
+              @if (p.description) {
+                <div class="mb-6 whitespace-pre-line text-sm leading-relaxed text-[#94a3b8]">{{ p.description }}</div>
+              }
+      
+              @if (p.liveUrl || p.githubUrl) {
+                <div class="flex gap-2 border-t border-[#1e2d45] pt-4">
+                  @if (p.liveUrl) {
+                    <a [href]="p.liveUrl" target="_blank" rel="noopener"
+                      class="font-display rounded bg-[#00e5c0] px-4 py-2 text-sm font-semibold text-[#080c14] hover:bg-[#00b899]">Live Demo ↗</a>
+                  }
+                  @if (p.githubUrl) {
+                    <a [href]="p.githubUrl" target="_blank" rel="noopener"
+                      class="rounded border border-[#1e2d45] px-4 py-2 text-sm text-[#94a3b8] hover:border-[#00e5c0] hover:text-[#e2e8f0]">View Source ↗</a>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </section>

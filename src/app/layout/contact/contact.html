@@ -1,0 +1,81 @@
+<!-- Contact -->
+<section id="contact" class="border-t border-[#1e2d45] py-24">
+  <div class="mx-auto max-w-5xl px-5 md:px-8">
+    <div class="grid items-start gap-12 md:grid-cols-[1fr_1.2fr]">
+      <div>
+        <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Contact</p>
+        <h2 class="font-display mb-4 text-3xl font-bold md:text-4xl">Let's build<br />something great.</h2>
+        <p class="mb-8 leading-relaxed text-[#64748b]">Whether you have a project in mind, a collaboration idea, or just want to say hello — my inbox is always open.</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Freelance: <span class="text-[#94a3b8]">Open to projects</span></span></div>
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Response time: <span class="text-[#94a3b8]">Usually within 24h</span></span></div>
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Timezone: <span class="text-[#94a3b8]">PST (UTC-8)</span></span></div>
+        </div>
+      </div>  
+ 
+      <div>
+        <div>
+          @if (!sent) {
+            <form
+              [formGroup]="contactForm"
+              (ngSubmit)="sendMessage()"
+              class="space-y-3.5 rounded border border-[#1e2d45] bg-[#0d1421] p-5"
+            >
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Name</label>
+                  <input formControlName="senderName" placeholder="Your name"
+                    class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+                </div>
+                <div>
+                  <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Email</label>
+                  <input type="email" formControlName="senderEmail" placeholder="you@example.com"
+                    class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+                </div>
+              </div>
+        
+              <div>
+                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Subject</label>
+                <input formControlName="subject" placeholder="What's this about?"
+                  class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+              </div>
+        
+              <div>
+                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Message</label>
+                <textarea formControlName="message" rows="5" placeholder="Tell me about your project or inquiry..."
+                  class="w-full resize-none rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm leading-relaxed text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none"></textarea>
+              </div>
+        
+              @if (contactForm.touched && contactForm.invalid) {
+                <p class="text-sm text-red-400">Please fill in your name, a valid email, and a message.</p>
+              }
+              @if (errorMessage) {
+                <p class="text-sm text-red-400">{{ errorMessage }}</p>
+              }
+        
+              <button type="submit" [disabled]="isSending"
+                class="font-display flex w-full items-center justify-center gap-2 rounded bg-[#00e5c0] py-2.5 text-sm font-semibold text-[#080c14] transition-colors hover:bg-[#00b899] disabled:opacity-60">
+                {{ isSending ? 'Sending...' : 'Send Message →' }}
+              </button>
+            </form>
+          } @else {
+            <div class="rounded border border-[#1e2d45] bg-[#0d1421] p-8 text-center">
+              <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#00e5c0]/30 bg-[#00e5c0]/10 text-xl text-[#00e5c0]">✓</div>
+              <h3 class="font-display mb-2 text-lg font-bold">Message sent!</h3>
+              <p class="mb-5 text-sm text-[#64748b]">Thanks for reaching out. I'll get back to you soon.</p>
+              <button type="button" (click)="sendAnother()" class="text-sm text-[#00e5c0] hover:text-[#00b899]">Send another message</button>
+            </div>
+          }
+        </div>
+
+        <!-- Success state: @if (sent()) — remove "hidden" -->
+        <div class="hidden rounded border border-[#1e2d45] bg-[#0d1421] p-8 text-center">
+          <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#00e5c0]/30 bg-[#00e5c0]/10 text-xl text-[#00e5c0]">✓</div>
+          <h3 class="font-display mb-2 text-lg font-bold">Message sent!</h3>
+          <p class="mb-5 text-sm text-[#64748b]">Thanks for reaching out. I'll get back to you soon.</p>
+          <button class="text-sm text-[#00e5c0] hover:text-[#00b899]">Send another message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,6 @@
+/* Component hosts are inline by default -> shrink to content inside flex parents. */
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}

@@ -1,0 +1,60 @@
+<!-- Skills -->
+<section id="skills" class="border-t border-[#1e2d45] py-24">
+  <div class="mx-auto max-w-5xl px-5 md:px-8">
+    <div class="mb-10">
+      <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Skills</p>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 class="font-display text-3xl font-bold md:text-4xl">Tools of the trade.</h2>
+
+        <div class="flex flex-wrap gap-1.5">
+          @for (c of categories; track c) {
+            <button
+              type="button"
+              (click)="filter = c"
+              class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
+              [class]="filter === c
+                ? 'border-[#00e5c0] bg-[#00e5c0] text-[#080c14]'
+                : 'border-[#1e2d45] text-[#64748b] hover:border-[#00e5c0] hover:text-[#00e5c0]'"
+            >
+              {{ c }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      @for (skill of visibleSkills; track skill._id) {
+        <div class="group rounded border border-[#1e2d45] bg-[#0d1421] p-4 transition-all duration-300 hover:border-[#00e5c0]/40">
+          <div class="mb-3 flex items-center gap-2.5">
+            @if (skill.iconUrl) {
+              <img [src]="skill.iconUrl" [alt]="skill.name" class="h-7 w-7 shrink-0 object-contain" />
+            } @else {
+              <div class="font-display flex h-7 w-7 shrink-0 items-center justify-center rounded bg-[#1e2d45] text-xs font-bold text-[#00e5c0]">
+                {{ skill.name.charAt(0).toUpperCase() }}
+              </div>
+            }
+            <div class="min-w-0">
+              <p class="font-display truncate text-sm font-medium">{{ skill.name }}</p>
+              <p class="text-xs text-[#64748b]">{{ skill.category }}</p>
+            </div>
+          </div>
+
+          @if (skill.proficiencyLevel) {
+            <div class="flex items-center gap-2">
+              <div class="h-1 flex-1 rounded-full bg-[#1e2d45]">
+                <div
+                  class="h-full rounded-full bg-[#00e5c0] transition-all duration-700 group-hover:bg-[#00b899]"
+                  [style.width.%]="skill.proficiencyLevel"
+                ></div>
+              </div>
+              <span class="font-mono text-xs tabular-nums text-[#64748b]">{{ skill.proficiencyLevel }}%</span>
+            </div>
+          }
+        </div>
+      } @empty {
+        <p class="col-span-full text-sm text-[#64748b]">No skills in this category yet.</p>
+      }
+    </div>
+  </div>
+</section>

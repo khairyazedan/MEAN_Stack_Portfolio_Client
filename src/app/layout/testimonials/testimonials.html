@@ -1,0 +1,164 @@
+<!-- Testimonials -->
+<section id="testimonials" class="border-t border-[#1e2d45] py-24">
+  <div class="mx-auto max-w-5xl px-5 md:px-8">
+
+    <div class="mb-10">
+      <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Testimonials</p>
+      <h2 class="font-display text-3xl font-bold md:text-4xl">Kind words.</h2>
+    </div>
+
+    <!-- Approved testimonials -->
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      @for (t of testimonials; track t._id) {
+        <figure class="flex flex-col rounded border border-[#1e2d45] bg-[#0d1421] p-5 transition-colors hover:border-[#00e5c0]/40">
+          @if (t.rating) {
+            <span class="mb-3 text-xs tracking-wider text-[#00e5c0]" [attr.aria-label]="t.rating + ' out of 5 stars'">
+              {{ '★'.repeat(t.rating) }}<span class="text-[#475569]">{{ '☆'.repeat(5 - t.rating) }}</span>
+            </span>
+          }
+          <blockquote class="flex-1 whitespace-pre-line text-sm leading-relaxed text-[#94a3b8]">“{{ t.content }}”</blockquote>
+          <figcaption class="mt-5 flex items-center gap-3 border-t border-[#1e2d45] pt-4">
+            @if (t.authorAvatar) {
+              <img [src]="t.authorAvatar" [alt]="t.authorName" class="h-10 w-10 shrink-0 rounded-full bg-[#1e2d45] object-cover" />
+            } @else {
+              <div class="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1e2d45] text-sm font-bold text-[#00e5c0]">
+                {{ t.authorName.charAt(0).toUpperCase() }}
+              </div>
+            }
+            <div class="min-w-0">
+              <p class="font-display truncate text-sm font-semibold">{{ t.authorName }}</p>
+              <p class="truncate text-xs text-[#64748b]">
+                {{ t.authorTitle }}@if (t.company) { · {{ t.company }} }
+              </p>
+            </div>
+          </figcaption>
+        </figure>
+      } @empty {
+        <p class="col-span-full text-sm text-[#64748b]">No testimonials yet. Be the first to leave one below.</p>
+      }
+    </div>
+
+    <!-- Write a testimonial -->
+    <div class="mt-20 grid items-start gap-12 border-t border-[#1e2d45] pt-16 md:grid-cols-[1fr_1.2fr]">
+
+      <div>
+        <p class="mb-4 font-mono text-xs uppercase tracking-widest text-[#00e5c0]">Leave a testimonial</p>
+        <h3 class="font-display mb-4 text-2xl font-bold md:text-3xl">Worked with me?<br />Share your experience.</h3>
+        <p class="mb-8 leading-relaxed text-[#64748b]">A few honest sentences about what it was like to work together means a lot, and helps future clients know what to expect.</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Takes <span class="text-[#94a3b8]">under a minute</span></span></div>
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Appears after <span class="text-[#94a3b8]">I review it</span></span></div>
+          <div class="flex items-center gap-3"><span class="h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span><span class="text-sm text-[#64748b]">Your email is <span class="text-[#94a3b8]">never collected</span></span></div>
+        </div>
+      </div>
+
+      <div>
+        @if (!sent) {
+          <form
+            [formGroup]="testimonialForm"
+            (ngSubmit)="sendTestimonial()"
+            class="space-y-3.5 rounded border border-[#1e2d45] bg-[#0d1421] p-5"
+          >
+            <!-- authorName * / authorTitle * -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label for="authorName" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Name *</label>
+                <input id="authorName" formControlName="authorName" autocomplete="name" placeholder="Your name"
+                  class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none [&.ng-invalid.ng-touched]:border-red-400" />
+                @if (testimonialForm.get('authorName')?.touched && testimonialForm.get('authorName')?.hasError('required')) {
+                  <p class="mt-1 text-xs text-red-400">Name is required</p>
+                }
+              </div>
+              <div>
+                <label for="authorTitle" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Job title *</label>
+                <input id="authorTitle" formControlName="authorTitle" autocomplete="organization-title" placeholder="e.g. Product Manager"
+                  class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none [&.ng-invalid.ng-touched]:border-red-400" />
+                @if (testimonialForm.get('authorTitle')?.touched && testimonialForm.get('authorTitle')?.hasError('required')) {
+                  <p class="mt-1 text-xs text-red-400">Job title is required</p>
+                }
+              </div>
+            </div>
+
+            <!-- company / relationship (optional, free text) -->
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label for="company" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Company</label>
+                <input id="company" formControlName="company" autocomplete="organization" placeholder="Where you work"
+                  class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+              </div>
+              <div>
+                <label for="relationship" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">We worked as</label>
+                <input id="relationship" formControlName="relationship" list="relationship-options" placeholder="e.g. Client"
+                  class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+                <datalist id="relationship-options">
+                  <option value="Client"></option>
+                  <option value="Colleague"></option>
+                  <option value="Manager"></option>
+                  <option value="Collaborator"></option>
+                </datalist>
+              </div>
+            </div>
+
+            <!-- authorAvatar (optional) -->
+            <div>
+              <label for="authorAvatar" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Photo URL</label>
+              <input id="authorAvatar" type="url" formControlName="authorAvatar" placeholder="https://... (optional)"
+                class="w-full rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none" />
+            </div>
+
+            <!-- rating (optional, 1 to 5) -->
+            <div>
+              <div class="mb-1.5 flex items-center justify-between">
+                <span class="text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Rating</span>
+                @if (testimonialForm.get('rating')?.value) {
+                  <button type="button" (click)="testimonialForm.get('rating')?.reset()"
+                    class="text-xs text-[#64748b] hover:text-[#00e5c0]">Clear</button>
+                }
+              </div>
+              <div
+                class="inline-flex flex-row-reverse gap-1 rounded p-1 focus-within:ring-2 focus-within:ring-[#00e5c0]/40"
+                role="radiogroup" aria-label="Rating"
+              >
+                @for (n of [5, 4, 3, 2, 1]; track n) {
+                  <input type="radio" [id]="'rating-' + n" [value]="n" formControlName="rating" class="peer sr-only" />
+                  <label
+                    [for]="'rating-' + n"
+                    [attr.aria-label]="n + (n === 1 ? ' star' : ' stars')"
+                    class="cursor-pointer text-2xl leading-none text-[#475569] transition-colors hover:text-[#00e5c0] [&:hover~label]:text-[#00e5c0] peer-checked:text-[#00e5c0]"
+                  >★</label>
+                }
+              </div>
+            </div>
+
+            <!-- content * -->
+            <div>
+              <label for="content" class="mb-1.5 block text-xs font-medium uppercase tracking-wider text-[#94a3b8]">Your testimonial *</label>
+              <textarea id="content" formControlName="content" rows="5" placeholder="What was it like working together?"
+                class="w-full resize-none rounded border border-[#1e2d45] bg-[#0d1421] px-3.5 py-2.5 text-sm leading-relaxed text-[#e2e8f0] placeholder-[#64748b]/60 transition-colors focus:border-[#00e5c0] focus:outline-none [&.ng-invalid.ng-touched]:border-red-400"></textarea>
+              @if (testimonialForm.get('content')?.touched && testimonialForm.get('content')?.hasError('required')) {
+                <p class="mt-1 text-xs text-red-400">Please write your testimonial</p>
+              }
+            </div>
+
+            @if (errorMessage) {
+              <p class="text-sm text-red-400" role="alert">{{ errorMessage }}</p>
+            }
+
+            <button type="submit" [disabled]="isSending"
+              class="font-display flex w-full items-center justify-center gap-2 rounded bg-[#00e5c0] py-2.5 text-sm font-semibold text-[#080c14] transition-colors hover:bg-[#00b899] disabled:cursor-not-allowed disabled:opacity-60">
+              {{ isSending ? 'Sending...' : 'Submit Testimonial →' }}
+            </button>
+          </form>
+        } @else {
+          <div class="rounded border border-[#1e2d45] bg-[#0d1421] p-8 text-center">
+            <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#00e5c0]/30 bg-[#00e5c0]/10 text-xl text-[#00e5c0]">✓</div>
+            <h3 class="font-display mb-2 text-lg font-bold">Thank you!</h3>
+            <p class="mb-5 text-sm text-[#64748b]">Your testimonial was received and will appear once I've reviewed it.</p>
+            <button type="button" (click)="sendAnother()" class="text-sm text-[#00e5c0] hover:text-[#00b899]">Write another</button>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

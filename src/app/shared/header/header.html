@@ -1,0 +1,38 @@
+<input #toggle type="checkbox" id="menuToggle" class="peer hidden" />
+
+<header class="fixed inset-x-0 top-0 z-40 border-b border-[#1e2d45] bg-[#080c14]/95 backdrop-blur">
+  <div class="mx-auto flex h-14 max-w-5xl items-center px-5 md:px-8">
+    <a routerLink="/home" class="font-display text-sm font-bold tracking-tight">
+      Alex Chen<span class="text-[#00e5c0]">.</span>
+    </a>
+
+    <!-- Desktop links -->
+    <nav class="ml-auto hidden items-center gap-1 md:flex">
+      @for (l of links; track l.path) {
+        <a
+          [routerLink]="l.path"
+          routerLinkActive="bg-teal/10! text-teal!"
+          class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white"
+        >{{ l.label }}</a>
+      }
+      <a routerLink="/admin/login" class="ml-2 text-xs text-[#64748b]/60 transition-colors hover:text-[#64748b]">admin</a>
+    </nav>
+
+    <!-- Hamburger: a label toggles the hidden checkbox -->
+    <label for="menuToggle" class="ml-auto cursor-pointer text-[#64748b] md:hidden" aria-label="Menu">☰</label>
+  </div>
+</header>
+
+<!-- Mobile menu: must be a sibling AFTER the checkbox so peer-checked works -->
+<div class="fixed inset-x-0 top-14 z-30 hidden flex-col gap-1 border-b border-[#1e2d45] bg-[#080c14] px-5 py-3 peer-checked:flex md:peer-checked:hidden">
+  @for (l of links; track l.path) {
+    <a
+      [routerLink]="l.path"
+      routerLinkActive="bg-teal/10! text-teal!"
+      (click)="toggle.checked = false"
+      class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white"
+    >{{ l.label }}</a>
+  }
+  <a routerLink="/admin/login" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-xs text-[#64748b]/60 hover:text-[#64748b]">admin</a>
+</div>

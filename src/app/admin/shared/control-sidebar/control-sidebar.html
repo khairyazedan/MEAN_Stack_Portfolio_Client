@@ -1,0 +1,109 @@
+<!-- control-sidebar.html
+imports: [RouterLink, RouterLinkActive]
+The checkbox MUST stay a sibling BEFORE the overlay so `peer-checked` works.
+The hamburger <label for="sidebarToggle"> lives in the admin layout header. -->
+<input #toggle type="checkbox" id="sidebarToggle" class="peer hidden" />
+
+<!-- ───────── Desktop sidebar ───────── -->
+<aside class="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-navy-600 bg-navy-800 md:flex">
+<div class="flex items-center gap-2 px-4 py-5">
+<div class="grid size-8 place-items-center rounded-lg bg-teal text-xs font-bold text-navy-900">AC</div>
+<span class="font-display text-sm font-semibold text-fore">Portfolio Admin</span>
+</div>
+<div class="mx-4 border-t border-navy-600"></div>
+
+<nav class="flex grow flex-col gap-1 px-2 py-3">
+<a routerLink="dashboard" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+ <span>Dashboard</span>
+</a>
+<a routerLink="projects" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 00-1.66 0L2.6 6.08a1 1 0 000 1.83l8.58 3.91a2 2 0 001.66 0l8.58-3.9a1 1 0 000-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 01-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 01-1.66 0L2 12.65"/></svg>
+ <span>Projects</span>
+</a>
+<a routerLink="skills" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 01-.78-1.63l9.9-10.2a.5.5 0 01.86.46l-1.92 6.02A1 1 0 0013 10h7a1 1 0 01.78 1.63l-9.9 10.2a.5.5 0 01-.86-.46l1.92-6.02A1 1 0 0011 14z"/></svg>
+ <span>Skills</span>
+</a>
+<a routerLink="article" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7z"/><path d="M14 2v4a2 2 0 002 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+ <span>Articles</span>
+</a>
+<a routerLink="about" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 00-16 0"/></svg>
+ <span>About</span>
+</a>
+<a routerLink="testimonials" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 12a2 2 0 002-2V8H8"/><path d="M14 12a2 2 0 002-2V8h-2"/></svg>
+ <span>Testimonials</span>
+</a>
+<a routerLink="messages" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
+ <span>Messages</span>
+</a>
+<a routerLink="settings" routerLinkActive="bg-teal/10! text-teal!"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+ <span>Settings</span>
+</a>
+</nav>
+
+<div class="mx-4 border-t border-navy-600"></div>
+<div class="flex flex-col gap-1 px-2 py-3">
+<a routerLink="/home"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">
+ <span class="w-4 text-center text-base leading-none">↗</span><span>View site</span>
+</a>
+<a routerLink="/admin/login"
+  class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/10">
+ <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+ <span>Sign out</span>
+</a>
+</div>
+</aside>
+
+<!-- ───────── Mobile overlay (opens when #sidebarToggle is checked) ───────── -->
+<div class="fixed inset-0 z-50 hidden peer-checked:flex md:peer-checked:hidden">
+<label for="sidebarToggle" class="absolute inset-0 cursor-pointer bg-black/60"></label>
+<aside class="relative z-10 flex h-full w-64 flex-col overflow-y-auto border-r border-navy-600 bg-navy-800">
+<div class="flex items-center gap-2 px-4 py-5">
+ <div class="grid size-8 place-items-center rounded-lg bg-teal text-xs font-bold text-navy-900">AC</div>
+ <span class="font-display text-sm font-semibold text-fore">Portfolio Admin</span>
+</div>
+<div class="mx-4 border-t border-navy-600"></div>
+
+<nav class="flex grow flex-col gap-1 px-2 py-3">
+ <a routerLink="dashboard" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Dashboard</a>
+ <a routerLink="projects" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Projects</a>
+ <a routerLink="skills" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Skills</a>
+ <a routerLink="article" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Articles</a>
+ <a routerLink="about" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">About</a>
+ <a routerLink="testimonials" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Testimonials</a>
+ <a routerLink="messages" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Messages</a>
+ <a routerLink="settings" routerLinkActive="bg-teal/10! text-teal!" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">Settings</a>
+</nav>
+
+<div class="mx-4 border-t border-navy-600"></div>
+<div class="flex flex-col gap-1 px-2 py-3">
+ <a routerLink="/home" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-navy-600/50 hover:text-white">↗ View site</a>
+ <a routerLink="/admin/login" (click)="toggle.checked = false"
+    class="rounded-lg px-3 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/10">Sign out</a>
+</div>
+</aside>
+</div>

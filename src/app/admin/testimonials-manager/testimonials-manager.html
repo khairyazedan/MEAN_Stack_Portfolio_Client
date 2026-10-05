@@ -1,0 +1,72 @@
+<div class="max-w-5xl space-y-4 p-4 md:p-6">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="font-display text-xl font-bold">Testimonials</h2>
+      <p class="text-sm text-[#64748b]">
+        {{ testimonials.length }} testimonials · {{ approvedCount }} visible on site
+      </p>
+    </div>
+  </div>
+
+  <div class="grid gap-3 md:grid-cols-2">
+    @for (t of testimonials; track t._id) {
+      <div class="flex flex-col rounded border border-[#1e2d45] bg-[#0d1421] p-4">
+
+        <div class="mb-3 flex items-center gap-3">
+          @if (t.authorAvatar) {
+            <img [src]="t.authorAvatar" [alt]="t.authorName" class="h-10 w-10 shrink-0 rounded-full bg-[#1e2d45] object-cover" />
+          } @else {
+            <div class="font-display flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1e2d45] text-sm font-bold text-[#00e5c0]">
+              {{ t.authorName.charAt(0).toUpperCase() }}
+            </div>
+          }
+
+          <div class="min-w-0 flex-1">
+            <p class="font-display truncate text-sm font-semibold">{{ t.authorName }}</p>
+            <p class="truncate text-xs text-[#64748b]">
+              {{ t.authorTitle }}@if (t.company) { · {{ t.company }} }
+            </p>
+          </div>
+
+          @if (t.rating) {
+            <span class="shrink-0 text-xs tracking-wider text-[#00e5c0]" [attr.aria-label]="t.rating + ' out of 5 stars'">
+              {{ '★'.repeat(t.rating) }}<span class="text-[#475569]">{{ '☆'.repeat(5 - t.rating) }}</span>
+            </span>
+          }
+        </div>
+
+        <p class="line-clamp-4 flex-1 whitespace-pre-line text-sm leading-relaxed text-[#94a3b8]">“{{ t.content }}”</p>
+
+        <div class="mt-4 flex items-center justify-between border-t border-[#1e2d45] pt-3">
+          <label class="flex cursor-pointer items-center gap-2 text-xs text-[#94a3b8]">
+            <input
+              type="checkbox"
+              [checked]="t.isApproved"
+              (change)="changeStatus(t, !t.isApproved)"
+              class="h-4 w-4 accent-[#00e5c0]"
+            />
+            Visible on site
+            @if (!t.isApproved) {
+              <span class="rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] text-amber-400">Pending</span>
+            }
+          </label>
+
+          <button
+            type="button"
+            (click)="selected = t; deleteMessage(t)"
+            aria-label="Delete testimonial"
+            class="rounded p-1.5 text-[#64748b] hover:bg-red-500/10 hover:text-red-400"
+          >🗑</button>
+        </div>
+      </div>
+    } @empty {
+      <div class="col-span-full rounded border border-[#1e2d45] bg-[#0d1421] py-20 text-center">
+        <p class="mb-4 text-4xl">💬</p>
+        <p class="font-display font-semibold">No testimonials yet</p>
+        <p class="mt-1 text-sm text-[#64748b]">Submissions from the portfolio form will appear here for review.</p>
+      </div>
+    }
+  </div>
+
+</div>

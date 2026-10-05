@@ -1,0 +1,5 @@
+/* Make the host element transparent to layout so the <aside> is a direct flex child
+   (fixes sticky + width problems caused by the default inline custom element). */
+:host {
+  display: contents;
+}

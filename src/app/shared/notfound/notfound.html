@@ -1,0 +1,65 @@
+<main
+  class="relative flex min-h-screen items-center justify-center overflow-hidden bg-navy px-5 text-fore"
+>
+  <!-- Dotted background -->
+  <div
+    class="pointer-events-none absolute inset-0 opacity-20"
+    style="
+      background-image: radial-gradient(circle, #1e2d45 1px, transparent 1px);
+      background-size: 20px 20px;
+    "
+  ></div>
+
+  <!-- Soft teal glow -->
+  <div
+    class="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-teal/5 blur-3xl"
+  ></div>
+
+  <div class="relative z-10 w-full max-w-lg text-center">
+    <p class="mb-5 font-mono text-xs uppercase tracking-widest text-teal">Error 404</p>
+
+    <h1 class="font-display text-8xl font-bold leading-none text-fore md:text-9xl">
+      4<span class="text-teal">0</span>4
+    </h1>
+
+    <h2 class="font-display mt-6 text-2xl font-bold md:text-3xl">
+      Page not found<span class="text-teal">.</span>
+    </h2>
+
+    <p class="mx-auto mt-4 max-w-md leading-relaxed text-muted">
+      The page you're looking for doesn't exist, was moved, or the link is broken. Let's get you
+      back on track.
+    </p>
+
+    <!-- Buttons -->
+    <!-- Buttons -->
+    <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+      <a
+        routerLink="/home"
+        class="font-display flex items-center gap-2 rounded bg-teal px-5 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-teal-dark"
+      >
+        ← Back to Home
+      </a>
+      <a
+        routerLink="/contact"
+        class="flex items-center gap-2 rounded border border-navy-600 px-5 py-2.5 text-sm font-medium text-fore/80 transition-colors hover:border-teal hover:text-fore"
+      >
+        Contact Me
+      </a>
+    </div>
+
+    <!-- Helpful links -->
+    <div class="mt-12 border-t border-navy-600 pt-6">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-muted">
+        Maybe you were looking for
+      </p>
+      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+        @for (link of links; track link.path) {
+          <a [routerLink]="link.path" class="text-muted transition-colors hover:text-teal">
+            {{ link.label }}
+          </a>
+        }
+      </nav>
+    </div>
+  </div>
+</main>

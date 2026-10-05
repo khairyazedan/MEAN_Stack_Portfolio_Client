@@ -1,0 +1,108 @@
+<div class="flex h-full flex-col overflow-hidden md:flex-row">
+
+  <!-- List panel -->
+  <div     
+    class="flex w-full shrink-0 flex-col overflow-hidden border-r border-[#1e2d45] md:flex md:w-80"
+    [class.hidden]="selected !== null"
+  >
+    <div class="shrink-0 border-b border-[#1e2d45] px-4 py-3">
+      <h2 class="font-display text-sm font-bold">Inbox</h2>
+      <p class="text-xs text-[#64748b]">{{ unreadCount }} unread · {{ contacts.length }} total</p>
+    </div>
+
+    <ul class="flex-1 overflow-y-auto">
+      @for (c of contacts; track c._id) {
+        <li
+          (click)="openMessage(c)"
+          class="flex cursor-pointer items-start gap-3 border-b border-[#1e2d45] px-4 py-3.5 transition-colors hover:bg-[#111827]"
+          [class.bg-[#111827]]="selected?._id === c._id"
+        >
+          <div class="font-display mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#1e2d45] text-xs font-bold text-[#00e5c0]">
+            {{ c.senderName.charAt(0).toUpperCase() }}
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1.5">
+              <span class="truncate text-sm" [class]="c.status === 'unread' ? 'font-semibold' : 'font-medium text-[#64748b]'">
+                {{ c.senderName }}
+              </span>
+              <span class="shrink-0 text-xs text-[#64748b]">{{ c.createdAt | date: 'MMM d' }}</span>
+            </div>
+            <p class="truncate text-xs" [class]="c.status === 'unread' ? 'text-[#94a3b8]' : 'text-[#64748b]'">
+              {{ c.subject || '(no subject)' }}
+            </p>
+            <p class="truncate text-xs text-[#64748b]">{{ c.message }}</p>
+          </div>
+          @if (c.status === 'unread') {
+            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#00e5c0]"></span>
+          }
+        </li>
+      } @empty {
+        <li class="flex flex-col items-center justify-center py-10">
+          <p class="mb-3 text-3xl">📭</p>
+          <p class="font-display text-sm font-medium">Empty inbox</p>
+          <p class="mt-1 text-xs text-[#64748b]">Contact form submissions appear here.</p>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- Detail panel -->
+  <div
+    class="flex flex-1 flex-col overflow-hidden md:flex"
+    [class.hidden]="selected === null"
+  >
+    @if (selected; as m) {
+      <div class="flex shrink-0 items-center gap-3 border-b border-[#1e2d45] px-4 py-3.5 md:px-5">
+        <button type="button" (click)="closeMessage()" class="rounded p-1 text-[#64748b] md:hidden">✕</button>
+        <div class="min-w-0 flex-1">
+          <h3 class="font-display truncate text-sm font-semibold">{{ m.subject || '(no subject)' }}</h3>
+          <p class="text-xs text-[#64748b]">From {{ m.senderName }} · {{ m.senderEmail }}</p>
+        </div>
+        <div class="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            (click)="markUnread()"
+            [disabled]="m.status === 'unread'"
+            class="rounded border border-[#1e2d45] px-2.5 py-1 text-xs text-[#64748b] transition-colors hover:border-[#00e5c0] hover:text-[#00e5c0] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Mark unread
+          </button>
+          <button
+            type="button"
+            (click)="deleteMessage()"
+            class="rounded p-1.5 text-[#64748b] transition-colors hover:bg-red-500/10 hover:text-red-400"
+            aria-label="Delete"
+          >🗑</button>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto px-4 py-5 md:px-5">
+        <div class="mb-4 rounded border border-[#1e2d45] bg-[#0d1421] p-4">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="font-display flex h-10 w-10 items-center justify-center rounded-full bg-[#1e2d45] text-sm font-bold text-[#00e5c0]">
+              {{ m.senderName.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <p class="text-sm font-medium">{{ m.senderName }}</p>
+              <p class="text-xs text-[#64748b]">{{ m.senderEmail }} · {{ m.createdAt | date: 'M/d/y, h:mm a' }}</p>
+            </div>
+          </div>
+          <p class="whitespace-pre-wrap text-sm leading-relaxed">{{ m.message }}</p>
+        </div>
+
+        <a
+          [href]="'mailto:' + m.senderEmail + '?subject=Re: ' + (m.subject || '')"
+          class="font-display inline-block rounded bg-[#00e5c0] px-4 py-2 text-sm font-semibold text-[#080c14] transition-colors hover:bg-[#00b899]"
+        >
+          Reply by email 
+        </a>
+      </div>
+    } @else {
+      <div class="flex flex-1 flex-col items-center justify-center">
+        <p class="mb-3 text-3xl">💬</p>
+        <p class="font-display text-sm font-medium">Select a message</p>
+        <p class="mt-1 text-xs text-[#64748b]">Click any message to read it.</p>
+      </div>
+    }
+  </div>
+</div>
