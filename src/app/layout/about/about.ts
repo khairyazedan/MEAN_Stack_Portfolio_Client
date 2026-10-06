@@ -11,7 +11,7 @@ import { AboutService } from '../../core/services/about.service';
 })
 export class About implements OnInit {
   about: IAbout | null = null;
-
+ 
   get bioParagraphs(): string[] {
     return (this.about?.bio ?? '')
       .split(/\n\s*\n/)
